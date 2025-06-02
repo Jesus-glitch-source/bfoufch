@@ -1,23 +1,24 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BFOUFCH</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    body, html {
+    html, body {
       width: 100%;
       height: 100%;
       background-color: #000;
       overflow: hidden;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
       color: white;
       font-family: Arial, sans-serif;
     }
@@ -36,10 +37,12 @@
     .dot:nth-child(1) { animation-delay: 0s; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
+
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-20px); }
     }
+
     .imagen {
       position: absolute;
       top: 0;
@@ -54,14 +57,17 @@
       cursor: pointer;
       will-change: transform, filter, opacity;
     }
+
     .mostrar {
       display: block;
       opacity: 1;
     }
+
     .imagen:hover {
       transform: scale(1.1);
       filter: blur(2px);
     }
+
     .texto {
       position: fixed;
       top: 50%;
@@ -75,11 +81,13 @@
       text-align: center;
       pointer-events: none;
     }
+
     #texto2 {
       top: calc(50% + 2.5rem);
       font-size: 1rem;
       color: red;
     }
+
     #intro, #subintro {
       position: relative;
       max-width: 90vw;
@@ -90,21 +98,26 @@
       z-index: 30;
       pointer-events: none;
     }
+
     #intro {
       font-size: 1.5rem;
       color: white;
     }
+
     #subintro {
       margin-top: 0.5rem;
       font-size: 0.9rem;
       color: #888888;
     }
+
     .visible {
       opacity: 1 !important;
     }
+
     .oculto {
       opacity: 0 !important;
     }
+
     #bloqueo {
       position: fixed;
       top: 0;
@@ -118,7 +131,6 @@
   </style>
 </head>
 <body>
-
   <div id="bloqueo"></div>
 
   <div class="dots" id="loader">
@@ -127,7 +139,7 @@
     <div class="dot"></div>
   </div>
 
-  <img id="imagen2" class="imagen" src="https://coolwallpapers.me/th700/5074180-khabib-nurmagomedov.jpg" alt="Imagen de Khabib">
+  <img id="imagen2" class="imagen" src="https://coolwallpapers.me/th700/5074180-khabib-nurmagomedov.jpg" alt="Imagen de Khabib" />
   
   <div id="texto1" class="texto">¡Bienvenido a BFOUFCH!</div>
   <div id="texto2" class="texto">Haz click para entrar</div>
@@ -191,15 +203,17 @@
     });
 
     imagen2.addEventListener('mouseenter', () => {
-      if (!textoMostrado) return;
-      texto1.style.opacity = '1';
-      texto2.style.opacity = '1';
+      if (textoMostrado) {
+        texto1.style.opacity = '1';
+        texto2.style.opacity = '1';
+      }
     });
 
     imagen2.addEventListener('mouseleave', () => {
-      if (!textoMostrado) return;
-      texto1.style.opacity = '0';
-      texto2.style.opacity = '0';
+      if (textoMostrado) {
+        texto1.style.opacity = '0';
+        texto2.style.opacity = '0';
+      }
     });
 
     imagen2.addEventListener('click', () => {
@@ -218,11 +232,10 @@
           intro.classList.add('oculto');
           subintro.classList.remove('visible');
           subintro.classList.add('oculto');
-          
+
           // Redirigir a la nueva página
           window.location.href = 'https://jesus-glitch-source.github.io/bfighters/';
         }, 3000);
-
       }, 300);
     });
   </script>
