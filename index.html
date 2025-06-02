@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .dots {
+      display: flex;
+      gap: 10px;
+      z-index: 1001;
+    }
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: red;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .dot:nth-child(1) { animation-delay: 0s; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .imagen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 10;
+      display: none;
+      cursor: pointer;
+      will-change: transform, filter, opacity;
+    }
+    .mostrar {
+      display: block;
+      opacity: 1;
+    }
+    .imagen:hover {
+      transform: scale(1.1);
+      filter: blur(2px);
+    }
+    .texto {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      font-weight: bold;
+      z-index: 20;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      text-align: center;
+      pointer-events: none;
+    }
+    #texto2 {
+      top: calc(50% + 2.5rem);
+      font-size: 1rem;
+      color: red;
+    }
+    #intro, #subintro {
+      position: relative;
+      max-width: 90vw;
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 30;
+      pointer-events: none;
+    }
+    #intro {
+      font-size: 1.5rem;
+      color: white;
+    }
+    #subintro {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #888888;
+    }
+    .visible {
+      opacity: 1 !important;
+    }
+    .oculto {
+      opacity: 0 !important;
+    }
+    #bloqueo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: transparent;
+      z-index: 1000;
+      pointer-events: all;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="bloqueo"></div>
+
+  <div class="dots" id="loader">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <img id="imagen2" class="imagen" src="https://coolwallpapers.me/th700/5074180-khabib-nurmagomedov.jpg" alt="Imagen de Khabib">
+  
+  <div id="texto1" class="texto">¡Bienvenido a BFOUFCH!</div>
+  <div id="texto2" class="texto">Haz click para entrar</div>
+  
+  <div id="intro">"Aunque caemos, volvemos a levantarnos porque el suelo no es lugar para campeones."</div>
+  <div id="subintro">- Dustin Poirier</div>
+
+  <script>
+    const loader = document.getElementById('loader');
+    const imagen2 = document.getElementById('imagen2');
+    const texto1 = document.getElementById('texto1');
+    const texto2 = document.getElementById('texto2');
+    const bloqueo = document.getElementById('bloqueo');
+    const intro = document.getElementById('intro');
+    const subintro = document.getElementById('subintro');
+
+    let interaccionActiva = false;
+    let textoMostrado = false;
+    let initialMousePos = null;
+
+    // Mostrar imagen y quitar bloqueo tras 3s
+    setTimeout(() => {
+      loader.style.display = 'none';
+      bloqueo.style.display = 'none';
+      imagen2.style.display = 'block';
+      void imagen2.offsetWidth;
+      imagen2.classList.add('mostrar');
+
+      const activarInteraccion = () => {
+        interaccionActiva = true;
+        document.removeEventListener('mousemove', activarInteraccion);
+      };
+      document.addEventListener('mousemove', activarInteraccion);
+    }, 3000);
+
+    // Detectar primer movimiento real para mostrar textos
+    document.addEventListener('mousemove', (e) => {
+      if (!interaccionActiva) return;
+
+      if (!initialMousePos) {
+        initialMousePos = { x: e.clientX, y: e.clientY };
+        return;
+      }
+
+      if (!textoMostrado) {
+        const movedX = Math.abs(e.clientX - initialMousePos.x);
+        const movedY = Math.abs(e.clientY - initialMousePos.y);
+
+        if (movedX > 1 || movedY > 1) {
+          textoMostrado = true;
+          texto1.style.opacity = '1';
+          texto2.style.opacity = '1';
+        }
+      }
+
+      if (textoMostrado) {
+        const xRatio = e.clientX / window.innerWidth;
+        const newOpacity = 0.3 + 0.7 * xRatio;
+        imagen2.style.opacity = newOpacity;
+      }
+    });
+
+    imagen2.addEventListener('mouseenter', () => {
+      if (!textoMostrado) return;
+      texto1.style.opacity = '1';
+      texto2.style.opacity = '1';
+    });
+
+    imagen2.addEventListener('mouseleave', () => {
+      if (!textoMostrado) return;
+      texto1.style.opacity = '0';
+      texto2.style.opacity = '0';
+    });
+
+    imagen2.addEventListener('click', () => {
+      texto1.style.opacity = '0';
+      texto2.style.opacity = '0';
+
+      setTimeout(() => {
+        imagen2.classList.remove('mostrar');
+        imagen2.style.display = 'none';
+        intro.classList.add('visible');
+        subintro.classList.add('visible');
+
+        // Redirección después de 3 segundos
+        setTimeout(() => {
+          intro.classList.remove('visible');
+          intro.classList.add('oculto');
+          subintro.classList.remove('visible');
+          subintro.classList.add('oculto');
+          
+          // Redirigir a la nueva página
+          window.location.href = 'file:///D:/PROYECTO/BFIGHTERS.html';
+        }, 3000);
+
+      }, 300);
+    });
+  </script>
+</body>
+</html>
